@@ -1,0 +1,2 @@
+jobname,taskname,schedule
+uptime-monitor,uptime_monitor,"*/1 * * * *"

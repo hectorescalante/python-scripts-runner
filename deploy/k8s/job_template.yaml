@@ -1,0 +1,28 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: ${jobname}
+spec:
+  schedule: ${schedule}
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+          - name: gcloud-credential
+            secret:
+              secretName: gcloud-credential
+          containers:
+          - name: ${jobname}
+            image: gcr.io/${imagepath}:${buildid}
+            volumeMounts:
+            - name: gcloud-credential
+              mountPath: "/var/credentials"
+            env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/var/credentials/service_account.json"
+            args:
+            - ${taskname}
+          restartPolicy: Never
